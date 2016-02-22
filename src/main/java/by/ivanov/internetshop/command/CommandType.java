@@ -7,7 +7,10 @@ public enum CommandType {
         REGISTRATION(new Register()),
         ADDTOBASKET(new AddToBasket()),
         BLOCKUSER(new BlockUser()),
-        LOCALE (new Locale());
+        LOCALE (new Locale()),
+        LOGOUT(new Logout()),
+        GOTOBASKET(new GoToBasket()),
+        ADDPRODUCT(new AddProduct());
         private Command command;
         private CommandType(Command command) {
             this.command = command;

@@ -2,7 +2,7 @@ package by.ivanov.internetshop.servlet;
 
 
 public class NameJspPage {
-    public static final String LOGIN_PAGE = "/login.jsp";
+    public static final String LOGIN_PAGE = "/index.jsp";
     public static final String ERROR_PAGE = "/jsp/error.jsp";
     public static final String REGISTRATION_PAGE = "/registration.jsp";
     public static final String ADMIN_PAGE = "/jsp/main_admin.jsp";

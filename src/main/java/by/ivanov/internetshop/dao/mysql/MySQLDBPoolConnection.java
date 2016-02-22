@@ -1,4 +1,4 @@
-package by.ivanov.internetshop.dao;
+package by.ivanov.internetshop.dao.mysql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,16 +33,16 @@ public class MySQLDBPoolConnection {
 
 
 
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() throws MySQLDBException {
         try {
 
             return connections.take();
         } catch (InterruptedException e) {
-            throw new SQLException("InterruptedException is thrown.", e);
+            throw new MySQLDBException("InterruptedException is thrown.", e);
         }
     }
 
-    public void putConnection(Connection connection)  throws SQLException {
+    public void putConnection(Connection connection)  throws MySQLDBException  {
         connections.offer(connection);
     }
 

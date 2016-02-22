@@ -1,6 +1,7 @@
 package by.ivanov.internetshop.servlet;
 
 import by.ivanov.internetshop.command.Command;
+import by.ivanov.internetshop.command.CommandException;
 import by.ivanov.internetshop.command.CommandFactory;
 
 import javax.servlet.RequestDispatcher;
@@ -29,8 +30,13 @@ public class Controller extends HttpServlet {
         String commandName = request.getParameter(ParameterName.COMMAND);
         CommandFactory commandFactory = CommandFactory.getInstance();
         Command command = commandFactory.createCommand(commandName);
+        try {
+            page = command.execute(request);
 
-        page = command.execute(request);
+    } catch (CommandException e) {
+        page =NameJspPage.ERROR_PAGE;
+
+    }
         sendResult(request, response, page);
     }
     private void sendResult(HttpServletRequest request, HttpServletResponse response, String page) throws IOException, ServletException {

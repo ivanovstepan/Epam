@@ -26,6 +26,15 @@
         <div class="control-group pull-left">
             <h2><fmt:message bundle="${loc}" key="title.name"/></h2>
         </div>
+
+        <div class="nav-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#about"><fmt:message bundle="${loc}" key="link.buy"/></a></li>
+                <li><a href="#about"><fmt:message bundle="${loc}" key="link.about"/></a></li>
+                <li><a href="#contact"><fmt:message bundle="${loc}" key="link.basket"/></a></li>
+            </ul>
+        </div>
+
         <div class="control-group pull-right">
 
             <div class="btn-group">
@@ -46,7 +55,8 @@
             </div>
             <div class="btn-group">
                 <form >
-                    <a class="btn btn-danger"><fmt:message bundle="${loc}" key="login.logout"/> </a>
+                    <input type="hidden" name="command" value="logout">
+                    <input type="submit" class="btn btn-danger" value="<fmt:message bundle="${loc}" key="login.logout"/>"/>
                 </form>
             </div>
 
@@ -54,9 +64,8 @@
     </div>
 </div>
 
+
 <div class="container">
-
-
     <form  class="pre-scrollable" name="userListForm" method="POST" action="/controller">
         <input type="hidden" name="command" value="blockuser" >
         <table class="table  table-striped">
@@ -64,6 +73,7 @@
                 <td ><fmt:message bundle="${loc}" key="user.list.name"/> </td>
                 <td ><fmt:message bundle="${loc}" key="user.list.surname"/></td>
                 <td ><fmt:message bundle="${loc}" key="user.list.email"/></td>
+                <td></td>>
 
             </tr>
             <c:forEach var="user" items="${users}">
@@ -73,7 +83,7 @@
                     <td >${user.getEmail()}</td>
                     <td >
                         <input type="hidden" name="block" value="${user.getId()}" >
-                        <input type="text" name="description" placeholder="Причина">
+                        <input type="text" name="description" placeholder="<fmt:message bundle="${loc}" key="user.list.reason"/>">
                         <input  type="submit" name="blockButton" value="<fmt:message bundle="${loc}" key="user.list.block"/>">
                     </td>
 

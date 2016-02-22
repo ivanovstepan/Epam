@@ -20,8 +20,20 @@
 <div class="navbar">
         <div class="container ">
             <div class="control-group pull-left">
-                <h2><fmt:message bundle="${loc}" key="title.name"/></h2>
+                <h2><fmt:message bundle="${loc}" key="title.name" /></h2>
                 </div>
+            <div class="nav-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#about"><fmt:message bundle="${loc}" key="link.about"/></a></li>
+                    <li>
+                        <form action="/controller" method="post">
+                            <input type="hidden" name="command" value="gotobasket" >
+                            <input class="btn btn-info"  type="submit" value="<fmt:message bundle="${loc}" key="link.basket"/>">
+                        </form>
+                    </li>
+                </ul>
+            </div>
                 <div class="control-group pull-right">
                     <div class="btn-group">
                         <form  action="/controller" method="post">
@@ -39,9 +51,10 @@
                                 <input type="image" src="../img/united_kingdom_640.png" style="width: 40px;height: 30px">
                             </form>
                         </div>
-                        <div class="btn-group">
+                        <div class="btn-group" >
                             <form >
-                                <a class="btn btn-danger"><fmt:message bundle="${loc}" key="login.logout"/> </a>
+                                <input type="hidden" name="command" value="logout">
+                                <input type="submit" class="btn btn-default" value="<fmt:message bundle="${loc}" key="login.logout"/>"/>
                             </form>
                         </div>
                 </div>
@@ -59,17 +72,15 @@
                 <td ><fmt:message bundle="${loc}" key="product.list.price"/></td>
                 <td ><fmt:message bundle="${loc}" key="product.list.count"/></td>
                 <td ><fmt:message bundle="${loc}" key="product.list.amount"/></td>
-
+                <td></td>
             </tr>
             <c:forEach var="good" items="${product}">
                 <tr >
                     <td>${good.getDescription()}</td>
                     <td>${good.getPrice()}</td>
                     <td>${good.getAmount()}</td>
-                    <td>
-                        <input type="text"  name="count" value="">
-                        <input type="hidden" name="product" value="${good.getId_product()}">
-                    </td>
+                    <td><input type="text"   name="count" value="0" placeholder="0"></td>
+                    <td><input type="hidden" name="product" value="${good.getId_product()}"></td>
                 </tr>
             </c:forEach>
         </table>

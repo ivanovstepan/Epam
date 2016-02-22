@@ -5,7 +5,17 @@ public class Product {
     private Long id_product;
     private String description;
     private int price;
-    private int amount;
+    private Long amount;
+
+    public int getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(int userCount) {
+        this.userCount = userCount;
+    }
+
+    private int userCount;
 
     public Long getId_product() {
         return id_product;
@@ -19,7 +29,7 @@ public class Product {
         return price;
     }
 
-    public int getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
@@ -39,12 +49,18 @@ public class Product {
         this.price = price;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 
-    public Product(int amount, int price, String description, Long id_product) {
+    public Product(Long amount, int price, String description, Long id_product) {
         this.amount = amount;
+        this.price = price;
+        this.description = description;
+        this.id_product = id_product;
+    }
+    public Product(int userCount, int price, String description, Long id_product) {
+        this.userCount = userCount;
         this.price = price;
         this.description = description;
         this.id_product = id_product;

@@ -13,5 +13,7 @@ public class DBColumnName {
     public static final String DESCRIPTION = "description";
     public static final String PRICE = "price";
     public static final String EMAIL = "email";
+    public static final String COUNT = "count";
+
 
 }

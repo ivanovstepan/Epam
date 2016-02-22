@@ -1,8 +1,10 @@
 package by.ivanov.internetshop.command.command;
 
 import by.ivanov.internetshop.command.Command;
+import by.ivanov.internetshop.command.CommandException;
 import by.ivanov.internetshop.dao.DaoFactory;
-import by.ivanov.internetshop.dao.MySQLDBDao;
+import by.ivanov.internetshop.dao.DatabaseException;
+import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
 import by.ivanov.internetshop.entity.Product;
 import by.ivanov.internetshop.entity.User;
 import by.ivanov.internetshop.servlet.NameJspPage;
@@ -15,25 +17,28 @@ import java.util.List;
 public class Register implements Command {
 
     @Override
-    public String execute(HttpServletRequest request) {
+    public String execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession(true);
 
-            String  name = request.getParameter(ParameterName.NAME);
-            String password = request.getParameter(ParameterName.PASSWORD);
-            String login = request.getParameter(ParameterName.LOGIN);
-            String surname = request.getParameter(ParameterName.SURNAME);
-            String email = request.getParameter(ParameterName.EMAIL);
-            User user = new User(name,surname,login,password,email,"user");
-           //нужна проверка на адекватность данных
-            session.setAttribute("user",user);
-//          request.getSession().setAttribute("user",entity);
+        String name = request.getParameter(ParameterName.NAME);
+        String password = request.getParameter(ParameterName.PASSWORD);
+        String login = request.getParameter(ParameterName.LOGIN);
+        String surname = request.getParameter(ParameterName.SURNAME);
+        String email = request.getParameter(ParameterName.EMAIL);
+        User user = new User(name, surname, login, password, email, "user");
+        //нужна проверка на адекватность данных
+        session.setAttribute("user", user);
 
-        DaoFactory daoFactory = DaoFactory.getInstance();
-        MySQLDBDao mySQLDBDao = daoFactory.getSQLDBDao();
-        List<Product> productList = mySQLDBDao.getProduct();
-        session.setAttribute("product",productList);
-        mySQLDBDao.addUser(user);
-
+        try {
+            DaoFactory daoFactory = DaoFactory.getInstance();
+            MySQLDBDao mySQLDBDao = daoFactory.getSQLDBDao();
+            List<Product> productList = mySQLDBDao.getProduct();
+            session.setAttribute("product", productList);
+            mySQLDBDao.addUser(user);
+        }
+        catch (DatabaseException e) {
+            throw new CommandException("DatabaseException is thrown", e);
+        }
         return NameJspPage.TRY_PAGE;
     }
 

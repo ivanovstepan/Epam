@@ -1,5 +1,7 @@
 package by.ivanov.internetshop.dao;
 
+import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
+
 public class DaoFactory {
     private volatile static boolean instanceCreated = false;
     private static DaoFactory instance;

@@ -10,8 +10,8 @@ public class SQLRequest {
 
     public static final String GET_USERS ="select * from user u left outer join  locked_users l ON l.id_lockeduser=u.id_user  where l.id_lockeduser is null and u.role='user'";
 
+    public static final String GET_ORDER ="select * from basket b join product p On b.id_product = p.id_product where b.id_user = ?";
 
 
-
-
+    public static final String ADD_PRODUCT = "INSERT INTO product   VALUES ( ?, ?, ?, ?) ";
 }
