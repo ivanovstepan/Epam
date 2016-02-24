@@ -1,6 +1,6 @@
 package by.ivanov.internetshop.dao;
 
-import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
+import by.ivanov.internetshop.dao.mysql.MySQLDao;
 
 public class DaoFactory {
     private volatile static boolean instanceCreated = false;
@@ -12,9 +12,9 @@ public class DaoFactory {
             }
         return instance;
     }
-    public static MySQLDBDao getSQLDBDao()
+    public static MySQLDao getSQLDBDao()
     {
-        MySQLDBDao mySQLDBDao = MySQLDBDao.getInstance();
-                return  mySQLDBDao;
+        MySQLDao SQLDao = MySQLDao.getInstance();
+                return SQLDao;
     }
 }

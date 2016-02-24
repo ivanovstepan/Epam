@@ -87,8 +87,11 @@
         <input class="btn btn-primary" type="submit" value="<fmt:message bundle="${loc}" key="product.list.submit"/>">
     </form>
 </div>
-<footer>
-    <p>&copy; Company 2014</p>
-</footer>
+
+<div id="footer">
+    <div class="container">
+        <p class="text-muted">&copy; Company 2016</p>
+    </div>
+</div>
 </body>
 </html>

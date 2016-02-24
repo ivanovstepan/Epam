@@ -4,7 +4,7 @@ import by.ivanov.internetshop.command.Command;
 import by.ivanov.internetshop.command.CommandException;
 import by.ivanov.internetshop.dao.DaoFactory;
 import by.ivanov.internetshop.dao.DatabaseException;
-import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
+import by.ivanov.internetshop.dao.mysql.MySQLDao;
 import by.ivanov.internetshop.entity.User;
 import by.ivanov.internetshop.servlet.NameJspPage;
 
@@ -22,9 +22,9 @@ public class AddToBasket implements Command {
 
         try {
             DaoFactory daoFactory = DaoFactory.getInstance();
-            MySQLDBDao mySQLDBDao = daoFactory.getSQLDBDao();
+            MySQLDao SQLDao = daoFactory.getSQLDBDao();
 
-            mySQLDBDao.addOrder(user, map);
+            SQLDao.addOrder(user, map);
             return NameJspPage.TRY_PAGE;
         }
         catch (DatabaseException e) {

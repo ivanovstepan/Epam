@@ -4,7 +4,7 @@ import by.ivanov.internetshop.command.Command;
 import by.ivanov.internetshop.command.CommandException;
 import by.ivanov.internetshop.dao.DaoFactory;
 import by.ivanov.internetshop.dao.DatabaseException;
-import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
+import by.ivanov.internetshop.dao.mysql.MySQLDao;
 import by.ivanov.internetshop.entity.Product;
 import by.ivanov.internetshop.entity.User;
 import by.ivanov.internetshop.servlet.NameJspPage;
@@ -27,10 +27,10 @@ public class Login implements Command {
 
         try {
             DaoFactory daoFactory = DaoFactory.getInstance();
-            MySQLDBDao mySQLDBDao = daoFactory.getSQLDBDao();
+            MySQLDao SQLDao = daoFactory.getSQLDBDao();
 
-            user = mySQLDBDao.findUser(login, password);
-            List<Product> productList = mySQLDBDao.getProduct();
+            user = SQLDao.findUser(login, password);
+            List<Product> productList = SQLDao.getProduct();
             session.setAttribute("product", productList);
 
 
@@ -41,7 +41,7 @@ public class Login implements Command {
                     page = NameJspPage.TRY_PAGE;
 
                 else {
-                    List<User> userList = mySQLDBDao.getUsers();
+                    List<User> userList = SQLDao.getUsers();
                     session.setAttribute("users", userList);
                     page = NameJspPage.ERROR_PAGE;
 

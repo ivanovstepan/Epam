@@ -4,7 +4,7 @@ import by.ivanov.internetshop.command.Command;
 import by.ivanov.internetshop.command.CommandException;
 import by.ivanov.internetshop.dao.DaoFactory;
 import by.ivanov.internetshop.dao.DatabaseException;
-import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
+import by.ivanov.internetshop.dao.mysql.MySQLDao;
 import by.ivanov.internetshop.dao.util.DBColumnName;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,11 +18,10 @@ public class AddProduct implements Command {
         int price = Integer.parseInt(request.getParameter(DBColumnName.PRICE));
         int amount = Integer.parseInt(request.getParameter(DBColumnName.AMOUNT));
 
-
         try {
             DaoFactory daoFactory = DaoFactory.getInstance();
-            MySQLDBDao mySQLDBDao = daoFactory.getSQLDBDao();
-            mySQLDBDao.addProduct(description,price,amount);
+            MySQLDao SQLDao = daoFactory.getSQLDBDao();
+            SQLDao.addProduct(description,price,amount);
 
         } catch (DatabaseException e) {
                 throw new CommandException("DatabaseException is thrown", e);

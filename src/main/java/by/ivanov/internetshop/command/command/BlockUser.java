@@ -4,7 +4,7 @@ import by.ivanov.internetshop.command.Command;
 import by.ivanov.internetshop.command.CommandException;
 import by.ivanov.internetshop.dao.DaoFactory;
 import by.ivanov.internetshop.dao.DatabaseException;
-import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
+import by.ivanov.internetshop.dao.mysql.MySQLDao;
 import by.ivanov.internetshop.entity.User;
 import by.ivanov.internetshop.servlet.NameJspPage;
 
@@ -21,9 +21,9 @@ public class BlockUser implements Command {
         User user = (User)request.getSession().getAttribute("user");
         try {
             DaoFactory daoFactory = DaoFactory.getInstance();
-            MySQLDBDao mySQLDBDao = daoFactory.getSQLDBDao();
+            MySQLDao SQLDao = daoFactory.getSQLDBDao();
 
-            mySQLDBDao.blockUser(map,user.getId());
+            SQLDao.blockUser(map,user.getId());
 
 
         }

@@ -4,7 +4,7 @@ import by.ivanov.internetshop.command.Command;
 import by.ivanov.internetshop.command.CommandException;
 import by.ivanov.internetshop.dao.DaoFactory;
 import by.ivanov.internetshop.dao.DatabaseException;
-import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
+import by.ivanov.internetshop.dao.mysql.MySQLDao;
 import by.ivanov.internetshop.entity.Product;
 import by.ivanov.internetshop.entity.User;
 import by.ivanov.internetshop.servlet.NameJspPage;
@@ -22,8 +22,8 @@ public class GoToBasket implements Command {
 
         try {
             DaoFactory daoFactory = DaoFactory.getInstance();
-            MySQLDBDao mySQLDBDao = daoFactory.getSQLDBDao();
-            List<Product> list= mySQLDBDao.getOrder(user.getId());
+            MySQLDao SQLDao = daoFactory.getSQLDBDao();
+            List<Product> list= SQLDao.getOrder(user.getId());
             session.setAttribute("product",list);
         }
             catch (DatabaseException e) {

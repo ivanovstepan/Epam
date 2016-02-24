@@ -1,6 +1,4 @@
 package by.ivanov.internetshop.dao.mysql;
-
-
 import by.ivanov.internetshop.dao.DBDao;
 import by.ivanov.internetshop.dao.DatabaseException;
 import by.ivanov.internetshop.dao.util.DBColumnName;
@@ -8,6 +6,7 @@ import by.ivanov.internetshop.dao.util.SQLRequest;
 import by.ivanov.internetshop.entity.Product;
 import by.ivanov.internetshop.entity.User;
 import by.ivanov.internetshop.generator.Generator;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,17 +14,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class MySQLDBDao implements DBDao {
-    private static MySQLDBDao instance;
+public class MySQLDao implements DBDao {
+    private static final Logger logger = Logger.getRootLogger();
+    private static MySQLDao instance;
     private volatile static boolean instanceCreated = false;
-    private static MySQLDBPoolConnection poolConnections;
+    private static MySQLPoolConnection poolConnections;
 
 
-    public static MySQLDBDao getInstance() {
+    public static MySQLDao getInstance() {
         if (!instanceCreated) {
-            instance = new MySQLDBDao();
+            instance = new MySQLDao();
             try {
-                poolConnections = new MySQLDBPoolConnection();
+                poolConnections = new MySQLPoolConnection();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -35,7 +35,7 @@ public class MySQLDBDao implements DBDao {
     }
 
     public static void init() throws Exception {
-        poolConnections = new MySQLDBPoolConnection();
+        poolConnections = new MySQLPoolConnection();
     }
 
     public static void destroy() throws SQLException {
@@ -57,8 +57,10 @@ public class MySQLDBDao implements DBDao {
             preparedStatement.setString(7, user.getRole());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            logger.error("SQLException is thrown when trying "+ SQLRequest.ADD_USER,e);
             throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.ADD_USER, e);
-        } catch (MySQLDBException e) {
+        } catch (MySQLException e) {
+            logger.error("MySQLDBDaoException is thrown when trying to take connection", e);
             throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
         }finally {
             try {
@@ -70,9 +72,11 @@ public class MySQLDBDao implements DBDao {
                 if (connection != null) {
                     poolConnections.putConnection(connection);
                 }
-            } catch (MySQLDBException e) {
+            } catch (MySQLException e) {
+                logger.error("MySQLDaoException is thrown when trying to put connection ", e);
                 throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
             } catch (SQLException e) {
+                logger.error("SQLException is thrown when closing a statement", e);
                 throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
             }
         }
@@ -95,8 +99,10 @@ public class MySQLDBDao implements DBDao {
             }
             return user;
         } catch (SQLException e) {
+            logger.error("SQLException is thrown when trying " +SQLRequest.GET_USER_WITH_LOGIN_PASSWORD,e);
             throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.GET_USER_WITH_LOGIN_PASSWORD, e);
-        } catch (MySQLDBException e) {
+        } catch (MySQLException e) {
+            logger.error("MySQLDBDaoException is thrown when trying to take connection", e);
             throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
         }  finally {
             try {
@@ -113,9 +119,11 @@ public class MySQLDBDao implements DBDao {
                 if (connection != null) {
                     poolConnections.putConnection(connection);
                 }
-            } catch (MySQLDBException e) {
+            } catch (MySQLException e) {
+                logger.error("MySQLDaoException is thrown when trying to put connection ", e);
                 throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
             } catch (SQLException e) {
+                logger.error("SQLException is thrown when closing a statement", e);
                 throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
             }
         }
@@ -145,10 +153,10 @@ public class MySQLDBDao implements DBDao {
     @Override
     public List<Product> getProduct() throws DatabaseException {
         List<Product> list = new ArrayList<Product>();
-        Product product = null;
+        Product product;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultProduct = null;
+        ResultSet resultProduct;
         try {
             connection = poolConnections.getConnection();
             preparedStatement = connection.prepareStatement(SQLRequest.GET_PRODUCT);
@@ -158,8 +166,10 @@ public class MySQLDBDao implements DBDao {
                 list.add(product);
             }
         } catch (SQLException e) {
+            logger.error("SQLException is thrown when trying "+SQLRequest.GET_PRODUCT,e);
             throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.GET_PRODUCT, e);
-        } catch (MySQLDBException e) {
+        } catch (MySQLException e) {
+            logger.error("MySQLDBDaoException is thrown when trying to take connection", e);
             throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
         } finally {
             try {
@@ -171,9 +181,11 @@ public class MySQLDBDao implements DBDao {
                 if (connection != null) {
                     poolConnections.putConnection(connection);
                 }
-            } catch (MySQLDBException e) {
+            } catch (MySQLException e) {
+                logger.error("MySQLDaoException is thrown when trying to put connection ", e);
                 throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
             } catch (SQLException e) {
+                logger.error("SQLException is thrown when closing a statement", e);
                 throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
             }
         }
@@ -198,8 +210,10 @@ public class MySQLDBDao implements DBDao {
                     preparedStatement.executeUpdate();
 
                 } catch (SQLException e) {
+                    logger.error("SQLException is thrown when trying " + SQLRequest.ADD_TO_BASKET,e);
                     throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.ADD_TO_BASKET, e);
-                } catch (MySQLDBException e) {
+                } catch (MySQLException e) {
+                    logger.error("MySQLDBDaoException is thrown when trying to take connection", e);
                     throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
                 } finally {
                     try {
@@ -211,9 +225,11 @@ public class MySQLDBDao implements DBDao {
                         if (connection != null) {
                             poolConnections.putConnection(connection);
                         }
-                    } catch (MySQLDBException e) {
+                    } catch (MySQLException e) {
+                        logger.error("MySQLDaoException is thrown when trying to put connection ", e);
                         throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
                     } catch (SQLException e) {
+                        logger.error("SQLException is thrown when closing a statement", e);
                         throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
                     }
                 }
@@ -224,10 +240,10 @@ public class MySQLDBDao implements DBDao {
     @Override
     public List<User> getUsers() throws DatabaseException {
         List<User> list = new ArrayList<User>();
-        User user = null;
+        User user ;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultProduct = null;
+        ResultSet resultProduct;
         try {
             connection = poolConnections.getConnection();
             preparedStatement = connection.prepareStatement(SQLRequest.GET_USERS);
@@ -237,8 +253,10 @@ public class MySQLDBDao implements DBDao {
                 list.add(user);
             }
         } catch (SQLException e) {
+            logger.error("SQLException is thrown when trying " + SQLRequest.GET_USERS,e);
             throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.GET_USERS, e);
-        } catch (MySQLDBException e) {
+        } catch (MySQLException e) {
+            logger.error("MySQLDBDaoException is thrown when trying to take connection", e);
             throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
         } finally {
             try {
@@ -250,9 +268,11 @@ public class MySQLDBDao implements DBDao {
                 if (connection != null) {
                     poolConnections.putConnection(connection);
                 }
-            } catch (MySQLDBException e) {
+            } catch (MySQLException e) {
+                logger.error("MySQLDaoException is thrown when trying to put connection ", e);
                 throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
             } catch (SQLException e) {
+                logger.error("SQLException is thrown when closing a statement", e);
                 throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
             }
         }
@@ -264,11 +284,11 @@ public class MySQLDBDao implements DBDao {
     public void blockUser(Map<String,String[]> map, int idAdmin) throws DatabaseException {
 
         String[] idUser = map.get("block");
-        String[] description = map.get("description");
-        String a = null;
+        String[] descriptions = map.get("description");
+        String description ;
         for (int i = 0; i < idUser.length; i++) {
-            a = description[i];
-            if (!a.equals("")) {
+            description = descriptions[i];
+            if (!description.equals("")) {
                 Connection connection = null;
                 PreparedStatement preparedStatement = null;
                 try {
@@ -276,11 +296,13 @@ public class MySQLDBDao implements DBDao {
                     preparedStatement = connection.prepareStatement(SQLRequest.BLOCKUSER);
                     preparedStatement.setLong(1, Long.parseLong(idUser[i]));
                     preparedStatement.setLong(2, idAdmin);
-                    preparedStatement.setString(3, a);
+                    preparedStatement.setString(3, description);
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
+                    logger.error("SQLException is thrown when trying " + SQLRequest.BLOCKUSER,e);
                     throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.BLOCKUSER, e);
-                } catch (MySQLDBException e) {
+                } catch (MySQLException e) {
+                    logger.error("MySQLDBDaoException is thrown when trying to take connection", e);
                     throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
                 } finally {
                     try {
@@ -292,9 +314,11 @@ public class MySQLDBDao implements DBDao {
                         if (connection != null) {
                             poolConnections.putConnection(connection);
                         }
-                    } catch (MySQLDBException e) {
+                    } catch (MySQLException e) {
+                        logger.error("MySQLDaoException is thrown when trying to put connection ", e);
                         throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
                     } catch (SQLException e) {
+                        logger.error("SQLException is thrown when closing a statement", e);
                         throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
                     }
                 }
@@ -321,8 +345,10 @@ public class MySQLDBDao implements DBDao {
                 list.add(product);
             }
         } catch (SQLException e) {
+            logger.error("SQLException is thrown when trying " +SQLRequest.GET_ORDER,e);
             throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.GET_PRODUCT, e);
-        } catch (MySQLDBException e) {
+        } catch (MySQLException e) {
+            logger.error("MySQLDBDaoException is thrown when trying to take connection", e);
             throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
         } finally {
             try {
@@ -334,9 +360,11 @@ public class MySQLDBDao implements DBDao {
                 if (connection != null) {
                     poolConnections.putConnection(connection);
                 }
-            } catch (MySQLDBException e) {
+            } catch (MySQLException e) {
+                logger.error("MySQLDaoException is thrown when trying to put connection ", e);
                 throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
             } catch (SQLException e) {
+                logger.error("SQLException is thrown when closing a statement", e);
                 throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
             }
         }
@@ -355,38 +383,41 @@ public class MySQLDBDao implements DBDao {
 
     @Override
     public void addProduct (String description,int price,int amount) throws DatabaseException {
-                Connection connection = null;
-                PreparedStatement preparedStatement = null;
-                try {
-                    connection = poolConnections.getConnection();
-                    preparedStatement = connection.prepareStatement(SQLRequest.ADD_PRODUCT);
-                    preparedStatement.setLong(1, Generator.generatorId());
-                    preparedStatement.setString(2, description);
-                    preparedStatement.setInt(3, price);
-                    preparedStatement.setInt(4, amount);
-                    preparedStatement.executeUpdate();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = poolConnections.getConnection();
+            preparedStatement = connection.prepareStatement(SQLRequest.ADD_PRODUCT);
+            preparedStatement.setLong(1, Generator.generatorId());
+            preparedStatement.setString(2, description);
+            preparedStatement.setInt(3, price);
+            preparedStatement.setInt(4, amount);
+            preparedStatement.executeUpdate();
 
-                } catch (SQLException e) {
-                    throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.ADD_TO_BASKET, e);
-                } catch (MySQLDBException e) {
-                    throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
-                } finally {
-                    try {
-                        if (preparedStatement != null) {
-                            if (!preparedStatement.isClosed()) {
-                                preparedStatement.close();
-                            }
-                        }
-                        if (connection != null) {
-                            poolConnections.putConnection(connection);
-                        }
-                    } catch (MySQLDBException e) {
-                        throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
-                    } catch (SQLException e) {
-                        throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
+        } catch (SQLException e) {
+            logger.error("SQLException is thrown when trying " + SQLRequest.ADD_PRODUCT,e);
+            throw new DatabaseException("SQLException is thrown when trying" + SQLRequest.ADD_TO_BASKET, e);
+        } catch (MySQLException e) {
+            logger.error("MySQLDBDaoException is thrown when trying to take connection", e);
+            throw new DatabaseException("MySQLDBDaoException is thrown when trying to take connection", e);
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    if (!preparedStatement.isClosed()) {
+                        preparedStatement.close();
                     }
                 }
+                if (connection != null) {
+                    poolConnections.putConnection(connection);
+                }
+            } catch (MySQLException e) {
+                logger.error("MySQLDaoException is thrown when trying to put connection ", e);
+                throw new DatabaseException("MySQLDBDaoException is thrown when trying to put connection ", e);
+            } catch (SQLException e) {
+                logger.error("SQLException is thrown when closing a statement", e);
+                throw new DatabaseException("SQLException is thrown when closing a statement or ResultSet", e);
             }
+        }
+    }
 
 }
-

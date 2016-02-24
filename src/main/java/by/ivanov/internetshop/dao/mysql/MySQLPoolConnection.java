@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class MySQLDBPoolConnection {
+public class MySQLPoolConnection {
     private String url = "jdbc:mysql://localhost:3306/internetshop";
     private String user = "root";
     private String password = "root";
@@ -14,7 +14,7 @@ public class MySQLDBPoolConnection {
     private int size = 5;
     private BlockingQueue<Connection> connections;
 
-    public MySQLDBPoolConnection() throws Exception {
+    public MySQLPoolConnection() throws Exception {
         try {
             Class.forName(driver);
             connections = new ArrayBlockingQueue<Connection>(size);
@@ -33,16 +33,15 @@ public class MySQLDBPoolConnection {
 
 
 
-    public Connection getConnection() throws MySQLDBException {
+    public Connection getConnection() throws MySQLException {
         try {
-
             return connections.take();
         } catch (InterruptedException e) {
-            throw new MySQLDBException("InterruptedException is thrown.", e);
+            throw new MySQLException("InterruptedException is thrown.", e);
         }
     }
 
-    public void putConnection(Connection connection)  throws MySQLDBException  {
+    public void putConnection(Connection connection)  throws MySQLException {
         connections.offer(connection);
     }
 

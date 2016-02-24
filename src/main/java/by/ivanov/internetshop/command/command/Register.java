@@ -4,7 +4,7 @@ import by.ivanov.internetshop.command.Command;
 import by.ivanov.internetshop.command.CommandException;
 import by.ivanov.internetshop.dao.DaoFactory;
 import by.ivanov.internetshop.dao.DatabaseException;
-import by.ivanov.internetshop.dao.mysql.MySQLDBDao;
+import by.ivanov.internetshop.dao.mysql.MySQLDao;
 import by.ivanov.internetshop.entity.Product;
 import by.ivanov.internetshop.entity.User;
 import by.ivanov.internetshop.servlet.NameJspPage;
@@ -31,10 +31,10 @@ public class Register implements Command {
 
         try {
             DaoFactory daoFactory = DaoFactory.getInstance();
-            MySQLDBDao mySQLDBDao = daoFactory.getSQLDBDao();
-            List<Product> productList = mySQLDBDao.getProduct();
+            MySQLDao SQLDao = daoFactory.getSQLDBDao();
+            List<Product> productList = SQLDao.getProduct();
             session.setAttribute("product", productList);
-            mySQLDBDao.addUser(user);
+            SQLDao.addUser(user);
         }
         catch (DatabaseException e) {
             throw new CommandException("DatabaseException is thrown", e);

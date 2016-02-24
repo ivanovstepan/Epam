@@ -58,9 +58,6 @@
     </div>
 </div>
 
-
-
-    <!-- Example row of columns -->
     <div class="row">
         <div class="col-md-6">
             <h2><fmt:message bundle="${loc}" key="admin.block"/></h2>
@@ -84,11 +81,10 @@
                                 <input type="hidden" name="block" value="${user.getId()}" >
                                 <input type="text" name="description" placeholder="<fmt:message bundle="${loc}" key="user.list.reason"/>">
                             </td>
-
                         </tr>
                     </c:forEach>
                 </table>
-                <input  type="submit" name="blockButton" value="<fmt:message bundle="${loc}" key="user.list.block"/>">
+                <input  type="submit" class="btn btn-default"  value="<fmt:message bundle="${loc}" key="user.list.block"/>">
             </form>
 
         </div>

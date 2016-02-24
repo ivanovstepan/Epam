@@ -17,28 +17,27 @@ public class Controller extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String page = null;
+        String page;
         request.setCharacterEncoding("utf-8");
         String commandName = request.getParameter(ParameterName.COMMAND);
         CommandFactory commandFactory = CommandFactory.getInstance();
         Command command = commandFactory.createCommand(commandName);
         try {
-            page = command.execute(request);
-
-    } catch (CommandException e) {
-        page =NameJspPage.ERROR_PAGE;
-
-    }
+                page = command.execute(request);
+            } catch (CommandException e) {
+                 page = null;
+            }
         sendResult(request, response, page);
     }
+
     private void sendResult(HttpServletRequest request, HttpServletResponse response, String page) throws IOException, ServletException {
         if (page == null) {
             response.sendRedirect(NameJspPage.INDEX_PAGE);
